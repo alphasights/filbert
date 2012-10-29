@@ -1,24 +1,17 @@
 # Filbert
 
-TODO: Write a gem description
+Filbert downloads a backup of a follower database for a given heroku application and stores it in `~/.heroku_backups`
 
 ## Installation
 
-Add this line to your application's Gemfile:
+    gem install filbert
 
-    gem 'filbert'
+And reload your path (e.g. `rbenv rehash`). Then run
 
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install filbert
 
 ## Usage
 
-TODO: Write usage instructions here
+    filbert backup --app your-heroku-appname
 
 ## Contributing
 
