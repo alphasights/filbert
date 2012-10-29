@@ -1,4 +1,0 @@
-Usage: heroku pgbackups:url [BACKUP_ID]
-
- get a temporary URL for a backup
-
