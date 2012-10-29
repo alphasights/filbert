@@ -18,6 +18,14 @@ class Db < Thor
     say file_path
   end
 
+  desc "cleanup", "remove backup files older than 24 hours"
+  def cleanup
+    old_files.each do |file|
+      say "Deleting old #{File.basename(file.path)}"
+      File.delete file.path
+    end
+  end
+
   private
 
     def run!(cmd)
@@ -29,8 +37,15 @@ class Db < Thor
       out
     end
 
-    def cleanup
-
+    def old_files
+      hurdle = Time.now - 60*60*24
+      Dir.new(backups_dir).select{ |x|
+        x.end_with? '.dump'
+      }.map { |filename|
+        file = File.new(File.join(backups_dir, filename))
+      }.select{ |file|
+        file.mtime < hurdle
+      }
     end
 
     def file_path
