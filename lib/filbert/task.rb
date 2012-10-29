@@ -50,7 +50,7 @@ module Filbert
       end
 
       def file_path
-        @filename ||= File.join(backups_dir, "pto_#{Time.now.strftime("%Y-%m-%d_%H-%M-%L")}.dump")
+        @filename ||= File.join(backups_dir, "#{options[:app]}_#{Time.now.strftime("%Y-%m-%d_%H-%M-%L")}.dump")
       end
 
       def backups_dir
