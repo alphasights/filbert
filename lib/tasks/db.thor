@@ -49,7 +49,7 @@ class Db < Thor
     end
 
     def file_path
-      @filename ||= File.join(backups_dir, "pto-#{Time.now.strftime("%Y_%m_%d-%H:%M:%L")}.dump")
+      @filename ||= File.join(backups_dir, "pto_#{Time.now.strftime("%Y-%m-%d_%H-%M-%L")}.dump")
     end
 
     def backups_dir
