@@ -1,5 +1,6 @@
-require "filbert/version"
+require 'tmpdir'
+require 'thor'
+require 'filbert/task'
 
 module Filbert
-  # Your code goes here...
 end

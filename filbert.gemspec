@@ -8,8 +8,8 @@ Gem::Specification.new do |gem|
   gem.version       = Filbert::VERSION
   gem.authors       = ["Tadas Tamosauskas"]
   gem.email         = ["tadas@pdfcv.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = "A utility to download backups from Heroku followers"
+  gem.summary       = "Heroku followers' backups"
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($/)
