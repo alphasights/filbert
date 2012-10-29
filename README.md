@@ -8,6 +8,9 @@ Filbert downloads a backup of a follower database for a given heroku application
 
 And reload your path (e.g. `rbenv rehash`). Then run
 
+    heroku login
+
+to get access to the app you are planning to backup.
 
 ## Usage
 
