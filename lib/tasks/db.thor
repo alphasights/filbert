@@ -38,7 +38,7 @@ class Db < Thor
     end
 
     def old_files
-      hurdle = Time.now - 60*60*24
+      hurdle = Time.now - 60*60*12
       Dir.new(backups_dir).select{ |x|
         x.end_with? '.dump'
       }.map { |filename|
