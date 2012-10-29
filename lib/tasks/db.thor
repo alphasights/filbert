@@ -14,7 +14,7 @@ class Db < Thor
     say "Fetching backup S3 URL"
     backup_url = run!("heroku pgbackups:url #{backup_id} --app #{options[:app]} ").strip.gsub("\"", "")
     say "Downloading #{backup_url}"
-    run! "wget -O #{backup_url} #{file_path}"
+    get backup_url, file_path
     say file_path
   end
 
@@ -29,7 +29,15 @@ class Db < Thor
       out
     end
 
+    def cleanup
+
+    end
+
     def file_path
-      @filename ||= File.join("/tmp", "pto-#{Time.now.strftime("%Y_%m_%d-%H:%M:%L")}.dump")
+      @filename ||= File.join(backups_dir, "pto-#{Time.now.strftime("%Y_%m_%d-%H:%M:%L")}.dump")
+    end
+
+    def backups_dir
+      File.join(Dir.home, '.heroku_backups')
     end
 end
