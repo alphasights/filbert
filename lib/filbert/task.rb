@@ -19,7 +19,7 @@ module Filbert
       invoke :cleanup
     end
 
-    desc "cleanup", "remove backup files older than 24 hours"
+    desc "cleanup", "remove backup files older than 12 hours"
     def cleanup
       old_files.each do |file|
         say "Deleting old #{File.basename(file.path)}"
