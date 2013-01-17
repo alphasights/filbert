@@ -1,3 +1,4 @@
+require 'yaml'
 module Filbert
   class DbConfig
     def initialize(config_path, env)
