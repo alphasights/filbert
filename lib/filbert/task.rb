@@ -1,9 +1,10 @@
+require 'filbert/db_config'
+
 module Filbert
   class Task < Thor
     include Thor::Actions
-    class_option :app, type: :string, required: true
 
-    method_options :real_emails => false
+    method_option :app, type: :string, required: true
     desc "backup", "capture and pull latest production snapshot and migrate local database"
     def backup
       say "Looking for the follower DB..."
@@ -27,6 +28,27 @@ module Filbert
       end
     end
 
+    method_option :config, type: :string, default: "config/database.yml"
+    method_option :env, type: :string, default: "production"
+    desc "restore", "restore the latest db dump"
+    def restore
+      most_recent_file = ordered_dumps.last
+      db_config = DbConfig.new(options[:config], options[:env])
+
+      check_dump_ready(most_recent_file)
+      check_config_ready(db_config)
+
+      say "Restoring: #{db_config.database} <--- #{most_recent_file.path}"
+      kill_connections(db_config.database, db_config.username)
+      ENV['PGPASSWORD'] = db_config.password
+      run! "pg_restore -U #{db_config.username} -d #{db_config.database} -w #{most_recent_file.path}"
+
+    rescue Errno::ENOENT
+      say "Could not find config file #{options[:config]}. Please pass in --config with a path to database.yml"
+    ensure
+      ENV['PGPASSWORD'] = nil
+    end
+
     private
 
       def run!(cmd)
@@ -40,13 +62,17 @@ module Filbert
 
       def old_files
         hurdle = Time.now - 60*60*12
+        ordered_dumps.select{ |file|
+          file.mtime < hurdle
+        }
+      end
+
+      def ordered_dumps
         Dir.new(backups_dir).select{ |x|
           x.end_with? '.dump'
         }.map { |filename|
-          file = File.new(File.join(backups_dir, filename))
-        }.select{ |file|
-          file.mtime < hurdle
-        }
+          File.new(File.join(backups_dir, filename))
+        }.sort_by(&:mtime)
       end
 
       def file_path
@@ -55,6 +81,25 @@ module Filbert
 
       def backups_dir
         File.join(Dir.home, '.heroku_backups')
+      end
+
+      def check_dump_ready(most_recent_file)
+        if most_recent_file.nil?
+          say "Didn't find any backup files in #{backups_dir}"
+          exit 0
+        end
+      end
+
+      def check_config_ready(db_config)
+        if db_config.config.nil?
+          say "Could not find config for \"#{options[:env]}\" in #{options[:config]}"
+          exit 0
+        end
+      end
+
+      def kill_connections(database, user)
+        sql = "SELECT pg_terminate_backend(procpid) FROM pg_stat_activity WHERE procpid <> pg_backend_pid();"
+        run "echo #{sql} |  psql -d #{database} -U #{user}"
       end
   end
 end
