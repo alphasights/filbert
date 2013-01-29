@@ -38,7 +38,7 @@ module Filbert
       say "Restoring: #{db_config.database} <--- #{most_recent_file.path}"
       invoke :kill_connections
       ENV['PGPASSWORD'] = db_config.password
-      run! "pg_restore -U #{db_config.username} -d #{db_config.database} -w #{most_recent_file.path}"
+      run! "pg_restore --clean --no-acl --no-owner -U #{db_config.username} -d #{db_config.database} -w #{most_recent_file.path}"
 
     rescue Errno::ENOENT
       say "Could not find config file #{options[:config]}. Please pass in --config with a path to database.yml"
