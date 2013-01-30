@@ -17,7 +17,7 @@ module Filbert
       say "Downloading #{backup_url}"
       get backup_url, file_path
       say file_path
-      invoke :cleanup
+      invoke :cleanup, [], {}
     end
 
     desc "cleanup", "remove backup files older than 12 hours"
