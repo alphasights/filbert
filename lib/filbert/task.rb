@@ -54,7 +54,7 @@ module Filbert
       user = db_config.username
 
       ENV['PGPASSWORD'] = db_config.password
-      sql = "SELECT pg_terminate_backend(procpid) FROM pg_stat_activity WHERE procpid <> pg_backend_pid();"
+      sql = "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE pid <> pg_backend_pid();"
       run! "echo \"#{sql}\" |  psql -d #{database} -U #{user}"
       say "Killed connections to #{database} as #{user}"
     ensure
