@@ -1,4 +1,5 @@
 require 'filbert/db_config'
+require 'clean_files/cleaner'
 
 module Filbert
   class Task < Thor
@@ -20,12 +21,16 @@ module Filbert
       invoke :cleanup, [], {}
     end
 
+    method_option :pretend, type: :boolean, required: false, default: false, aliases: '-p'
     desc "cleanup", "remove backup files older than 12 hours"
     def cleanup
-      old_files.each do |file|
-        say "Deleting old #{File.basename(file.path)}"
-        File.delete file.path
-      end
+      pretend = options[:pretend]
+      say "Would remove:" if pretend
+      filter = File.join(backups_dir, "*.dump")
+      CleanFiles::Cleaner.new(filter, pretend: pretend, verbose: pretend, threshold: 6.months.ago, monthly: true).start
+      CleanFiles::Cleaner.new(filter, pretend: pretend, verbose: pretend, threshold: 3.months.ago, weekly: true).start
+      CleanFiles::Cleaner.new(filter, pretend: pretend, verbose: pretend, threshold: 1.week.ago,   daily: true).start
+      CleanFiles::Cleaner.new(filter, pretend: pretend, verbose: pretend, threshold: 12.hours.ago, hourly: true).start
     end
 
     method_option :config, type: :string, default: "config/database.yml"
@@ -70,13 +75,6 @@ module Filbert
           exit! $?.exitstatus
         end
         out
-      end
-
-      def old_files
-        hurdle = Time.now - 60*60*12
-        ordered_dumps.select{ |file|
-          file.mtime < hurdle
-        }
       end
 
       def ordered_dumps
