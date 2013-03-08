@@ -22,7 +22,7 @@ module Filbert
     end
 
     method_option :pretend, type: :boolean, required: false, default: false, aliases: '-p'
-    desc "cleanup", "remove backup files older than 12 hours"
+    desc "cleanup", "Remove old dumps intelligently keeping some of them"
     def cleanup
       pretend = options[:pretend]
       say "Would remove:" if pretend
