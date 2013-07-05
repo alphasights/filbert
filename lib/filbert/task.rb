@@ -7,6 +7,7 @@ module Filbert
     include Thor::Actions
 
     method_option :app, type: :string, required: true
+    method_option :log, type: :string, required: false 
     desc "backup", "capture and pull latest production snapshot and migrate local database"
     def backup
       say "Looking for the follower DB..."
@@ -19,7 +20,7 @@ module Filbert
       say "Downloading #{backup_url}"
       get backup_url, file_path
       say file_path
-      Log.new(:backup, db_name).success if File.exists?(file_path)
+      Log.new(:backup, db_name, log).success if File.exists?(file_path) && options[:log]
       invoke :cleanup, [], {}
     end
 

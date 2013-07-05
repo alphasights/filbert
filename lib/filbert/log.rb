@@ -2,9 +2,10 @@ require 'rest_client'
 require 'json'
 
 class Log
-  def initialize(task_name, db_name)
+  def initialize(task_name, db_name, datastore)
     @task_name = task_name
-    @db_name = db_name
+    @db_name   = db_name
+    @datastore = datastore
   end
 
   def success 
@@ -15,11 +16,7 @@ class Log
 
   private
 
-  attr_reader :task_name, :db_name
-
-  def datastore 
-    ENV['FILBERT_LOG_URL']
-  end
+  attr_reader :task_name, :db_name, :datastore
 
   def rev
     payload = RestClient.get(datastore)
