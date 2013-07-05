@@ -2,8 +2,9 @@ require 'rest_client'
 require 'json'
 
 class Log
-  def initialize(task_name)
+  def initialize(task_name, db_name)
     @task_name = task_name
+    @db_name = db_name
   end
 
   def success 
@@ -13,6 +14,8 @@ class Log
   end
 
   private
+  
+  attr_reader :task_name, :db_name
 
   def datastore 
     ENV['FILBERT_LOG_URL']
@@ -26,7 +29,7 @@ class Log
   def payload 
     {
       "_rev" => rev,
-      "app"=> "pistachio",
+      "app"=> db_name,
       "timestamp"=> Time.now.to_s,
       "js_timestamp" => Time.now.to_i, 
       "task_name" => task_name
