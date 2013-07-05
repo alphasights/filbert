@@ -1,4 +1,5 @@
 require 'filbert/db_config'
+require 'filbert/log'
 require 'clean_files/cleaner'
 
 module Filbert
@@ -18,6 +19,7 @@ module Filbert
       say "Downloading #{backup_url}"
       get backup_url, file_path
       say file_path
+      Log.new(:backup).success
       invoke :cleanup, [], {}
     end
 
