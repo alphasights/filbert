@@ -20,7 +20,7 @@ module Filbert
       say "Downloading #{backup_url}"
       get backup_url, file_path
       say file_path
-      Log.new(:backup, db_name, log).success if File.exists?(file_path) && options[:log]
+      Log.new(:backup, db_name, options[:log]).success if File.exists?(file_path) && options[:log]
       invoke :cleanup, [], {}
     end
 
