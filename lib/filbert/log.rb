@@ -8,9 +8,9 @@ class Log
     @datastore = datastore
   end
 
-  def success 
+  def success
     RestClient.put(datastore, payload.to_json) unless datastore.nil?
-  rescue RestClient::Exception 
+  rescue RestClient::Exception
     #just dont explode the back up task
   end
 
@@ -23,12 +23,12 @@ class Log
     JSON.parse(payload)['_rev']
   end
 
-  def payload 
+  def payload
     {
       "_rev" => rev,
       "app"=> db_name,
       "timestamp"=> Time.now.to_s,
-      "js_timestamp" => Time.now.to_i, 
+      "js_timestamp" => Time.now.to_i,
       "task_name" => task_name
     }
   end

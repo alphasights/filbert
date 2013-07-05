@@ -7,7 +7,7 @@ module Filbert
     include Thor::Actions
 
     method_option :app, type: :string, required: true
-    method_option :log, type: :string, required: false 
+    method_option :log, type: :string, required: false
     desc "backup", "capture and pull latest production snapshot and migrate local database"
     def backup
       say "Looking for the follower DB..."
