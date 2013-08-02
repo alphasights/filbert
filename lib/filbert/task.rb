@@ -14,14 +14,19 @@ module Filbert
       db_name = run!("heroku pg:info --app #{options[:app]} | grep Followers | awk '/:(.)*/ { print $2 }'").strip
       say "Found the follower: #{db_name}. Capturing..."
       backup_id = run!("heroku pgbackups:capture #{db_name} --expire --app #{options[:app]} | grep backup | awk '/--->/ { print $3}'").strip
-      say "Backup id: #{backup_id}"
-      say "Fetching backup S3 URL"
-      backup_url = run!("heroku pgbackups:url #{backup_id} --app #{options[:app]} ").strip.gsub("\"", "")
-      say "Downloading #{backup_url}"
-      get backup_url, file_path
-      say file_path
-      Log.new(:backup, db_name, options[:log]).success if File.exists?(file_path) && options[:log]
-      invoke :cleanup, [], {}
+      if backup_id != "error"
+        say "Backup id: #{backup_id}"
+        say "Fetching backup S3 URL"
+        backup_url = run!("heroku pgbackups:url #{backup_id} --app #{options[:app]} ").strip.gsub("\"", "")
+        say "Downloading #{backup_url}"
+        get backup_url, file_path
+        say file_path
+        Log.new(:backup, db_name, options[:log]).success if File.exists?(file_path) && options[:log]
+        invoke :cleanup, [], {}
+      else
+        say "Error capturing #{db_name}. Run `heroku pgbackups --app #{options[:app]}` to see if there are any transfers in progress."
+        exit! 1
+      end
     end
 
     method_option :pretend, type: :boolean, required: false, default: false, aliases: '-p'
