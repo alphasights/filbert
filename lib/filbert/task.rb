@@ -11,7 +11,7 @@ module Filbert
     desc "backup", "capture and pull latest production snapshot and migrate local database"
     def backup
       say "Looking for the follower DB..."
-      db_name = run!("heroku pg:info --app #{options[:app]} | grep Followers | awk '/:(.)*/ { print $2 }'").strip
+      db_name = run!("heroku pg:info --app #{options[:app]} | grep -A 1 Followers | awk 'NR==2'").strip
       say "Found the follower: #{db_name}. Capturing..."
       backup_id = run!("heroku pgbackups:capture #{db_name} --expire --app #{options[:app]} | grep backup | awk '/--->/ { print $3}'").strip
       if backup_id != "error"
