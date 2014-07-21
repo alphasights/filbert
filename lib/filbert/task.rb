@@ -36,7 +36,7 @@ module Filbert
       filter = File.join(backups_dir, "*.dump")
       CleanFiles::Cleaner.new(filter, pretend: pretend, verbose: pretend, threshold: 6.months.ago, monthly: true).start
       CleanFiles::Cleaner.new(filter, pretend: pretend, verbose: pretend, threshold: 3.months.ago, weekly: true).start
-      CleanFiles::Cleaner.new(filter, pretend: pretend, verbose: pretend, threshold: 1.week.ago,   daily: true).start
+      CleanFiles::Cleaner.new(filter, pretend: pretend, verbose: pretend, threshold: 3.days.ago,   daily: true).start
       CleanFiles::Cleaner.new(filter, pretend: pretend, verbose: pretend, threshold: 12.hours.ago, hourly: true).start
     end
 
