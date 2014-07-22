@@ -22,6 +22,7 @@ module Filbert
         get backup_url, file_path
         say file_path
         Log.new(:backup, db_name, options[:log]).success if File.exists?(file_path) && options[:log]
+        invoke :cleanup, [], {}
       else
         say "Error capturing #{db_name}. Run `heroku pgbackups --app #{options[:app]}` to see if there are any transfers in progress."
         exit! 1
