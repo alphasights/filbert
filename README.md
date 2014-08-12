@@ -38,9 +38,9 @@ Cleanup deletes backup files keeping:
 
 * All files that are not older than 12 hours old
 * One monthly copy of files older than 6 months
-* One weekly copy of files older than 3 months
-* One daily copy of files older than 3 days
-* One hourly copy of files older than 12 hours
+* One weekly copy of files older than 2 months
+* One daily copy of files older than 2 days
+* One hourly copy of files older than 6 hours
 
 You can see what files would be deleted by passing in `-p`
 

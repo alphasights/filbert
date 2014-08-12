@@ -36,9 +36,9 @@ module Filbert
       say "Would remove:" if pretend
       filter = File.join(backups_dir, "*.dump")
       CleanFiles::Cleaner.new(filter, pretend: pretend, verbose: pretend, threshold: 6.months.ago, monthly: true).start
-      CleanFiles::Cleaner.new(filter, pretend: pretend, verbose: pretend, threshold: 3.months.ago, weekly: true).start
-      CleanFiles::Cleaner.new(filter, pretend: pretend, verbose: pretend, threshold: 3.days.ago,   daily: true).start
-      CleanFiles::Cleaner.new(filter, pretend: pretend, verbose: pretend, threshold: 12.hours.ago, hourly: true).start
+      CleanFiles::Cleaner.new(filter, pretend: pretend, verbose: pretend, threshold: 2.months.ago, weekly: true).start
+      CleanFiles::Cleaner.new(filter, pretend: pretend, verbose: pretend, threshold: 2.days.ago,   daily: true).start
+      CleanFiles::Cleaner.new(filter, pretend: pretend, verbose: pretend, threshold: 6.hours.ago, hourly: true).start
     end
 
     method_option :config, type: :string, default: "config/database.yml"
