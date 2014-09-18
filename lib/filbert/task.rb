@@ -50,13 +50,10 @@ module Filbert
 
       say "Restoring: #{db_config.database} <--- #{most_recent_file.path}"
       invoke :kill_connections
-      ENV['PGPASSWORD'] = db_config.password
-      run! "pg_restore --clean --no-acl --no-owner -U #{db_config.username} -d #{db_config.database} -w #{most_recent_file.path}"
+      run! "env PGPASSWORD=#{db_config.password} pg_restore --clean --verbose --no-acl --no-owner --jobs=#{cpu_cores} -U #{db_config.username} -d #{db_config.database} -w #{most_recent_file.path}"
 
     rescue Errno::ENOENT
       say "Could not find config file #{options[:config]}. Please pass in --config with a path to database.yml"
-    ensure
-      ENV['PGPASSWORD'] = nil
     end
 
     method_option :config, type: :string, default: "config/database.yml"
@@ -117,6 +114,10 @@ module Filbert
           end
           db_config
         end
+      end
+
+      def cpu_cores
+        Integer(`sysctl -n hw.ncpu`) rescue 2
       end
   end
 end
